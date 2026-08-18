@@ -24,7 +24,7 @@ Cloudflare Worker（zhijin-aws-proxy）
         └── /chain-notebook/*  → AWS S3 项目源站
                                   └─ 重写页面中的 href / src 前缀
         └── /blockchain-homework/* → 302 跳转到 AWS EC2 临时演示源站
-                                      ├─ /         → 项目总览
+                                      ├─ /         → 项目总览（使用 AWS IP，确保端口 Host 校验通过）
                                       ├─ :5174/    → Cosmos 钱包、转账、挖矿
                                       └─ :5173/    → EVM RPC、ethers.js、The Graph
 ```

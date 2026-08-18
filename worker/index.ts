@@ -9,7 +9,7 @@ const PROJECTS: Readonly<Record<string, ProjectRoute>> = {
       'http://chain-notebook-leon4868-20260810-36f9214.s3-website-us-west-2.amazonaws.com',
   },
   'blockchain-homework': {
-    origin: 'http://ec2-35-93-216-60.us-west-2.compute.amazonaws.com',
+    origin: 'http://35.93.216.60',
     redirectOnly: true,
   },
 }
