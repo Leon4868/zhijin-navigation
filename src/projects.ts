@@ -21,4 +21,15 @@ export const projects: Project[] = [
     status: 'online',
     sequence: '01',
   },
+  {
+    name: 'Blockchain Homework',
+    path: '/blockchain-homework/',
+    displayUrl: 'zhijin.fun/blockchain-homework',
+    category: 'Web3 · Blockchain',
+    description:
+      '从 Cosmos 钱包、转账和挖矿，到 EVM RPC、ethers.js 与 The Graph 的链上数据实验合集。',
+    technologies: ['Cosmos SDK', 'Go', 'ethers.js', 'The Graph'],
+    status: 'online',
+    sequence: '02',
+  },
 ]

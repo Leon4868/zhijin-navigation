@@ -1,11 +1,16 @@
 type ProjectRoute = {
   origin: string
+  redirectOnly?: boolean
 }
 
 const PROJECTS: Readonly<Record<string, ProjectRoute>> = {
   'chain-notebook': {
     origin:
       'http://chain-notebook-leon4868-20260810-36f9214.s3-website-us-west-2.amazonaws.com',
+  },
+  'blockchain-homework': {
+    origin: 'http://ec2-35-93-216-60.us-west-2.compute.amazonaws.com',
+    redirectOnly: true,
   },
 }
 
@@ -85,6 +90,13 @@ export default {
     if (incoming.pathname === `/${slug}`) {
       incoming.pathname = `/${slug}/`
       return Response.redirect(incoming.toString(), 308)
+    }
+
+    if (project.redirectOnly) {
+      const target = new URL(project.origin)
+      target.pathname = incoming.pathname.slice(`/${slug}`.length) || '/'
+      target.search = incoming.search
+      return Response.redirect(target.toString(), 302)
     }
 
     try {

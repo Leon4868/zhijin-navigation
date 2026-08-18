@@ -2,13 +2,14 @@
 
 > `zhijin.fun` 的个人项目目录。把分散的实验、DApp 和产品原型，整理成一个清晰的入口。
 
-[在线访问](https://zhijin.fun/) · [Chain Notebook](https://zhijin.fun/chain-notebook/)
+[在线访问](https://zhijin.fun/) · [Chain Notebook](https://zhijin.fun/chain-notebook/) · [Blockchain Homework](https://zhijin.fun/blockchain-homework/)
 
 ## ✦ 当前项目
 
 | 状态 | 项目 | 入口 | 简介 |
 | --- | --- | --- | --- |
 | 🟢 在线 | **Chain Notebook** | [`/chain-notebook/`](https://zhijin.fun/chain-notebook/) | 基于 Sepolia 的链上笔记 DApp |
+| 🟢 在线 | **Blockchain Homework** | [`/blockchain-homework/`](https://zhijin.fun/blockchain-homework/) | Cosmos 与 EVM 链上开发作业演示 |
 
 项目卡片统一维护在 [`src/projects.ts`](src/projects.ts)，导航首页会根据这份数据自动渲染。
 
@@ -22,6 +23,10 @@ Cloudflare Worker（zhijin-aws-proxy）
         ├── /                  → Vite 静态资源（dist）
         └── /chain-notebook/*  → AWS S3 项目源站
                                   └─ 重写页面中的 href / src 前缀
+        └── /blockchain-homework/* → 302 跳转到 AWS EC2 临时演示源站
+                                      ├─ /         → 项目总览
+                                      ├─ :5174/    → Cosmos 钱包、转账、挖矿
+                                      └─ :5173/    → EVM RPC、ethers.js、The Graph
 ```
 
 Worker 还负责两项入口规范化：
@@ -122,6 +127,7 @@ npm run deploy:check
 - `dist` 是由 Vite 构建出的静态资源目录
 - `run_worker_first` 确保项目路径先经过 Worker 路由判断
 - Worker 与导航页静态资源会在同一次 Wrangler 部署中发布
+- `blockchain-homework` 通过 302 网关跳转到临时 AWS EC2 源站，避免 Worker 直接回源公网 IP 时被边缘网络拦截
 
 ```bash
 npm run deploy:check
@@ -134,3 +140,14 @@ npm run deploy
 
 - 首页：<https://zhijin.fun/>
 - Chain Notebook：<https://zhijin.fun/chain-notebook/>
+- Blockchain Homework：<https://zhijin.fun/blockchain-homework/>
+
+### Blockchain Homework 临时入口
+
+本次作业部署在一个限时 AWS EC2 演示实例上，直接地址如下：
+
+- 总览：<http://35.93.216.60/>
+- Cosmos：<http://35.93.216.60:5174/>
+- EVM：<http://35.93.216.60:5173/>
+
+实例按本次“一小时演示”要求自动释放；如果实例已释放，域名入口会暂时返回不可用，需要重新部署后更新 `worker/index.ts` 中的源站地址。
