@@ -1,153 +1,102 @@
-# Zhijin Navigation
+# ZHJIN AI Studio
 
-> `zhijin.fun` 的个人项目目录。把分散的实验、DApp 和产品原型，整理成一个清晰的入口。
+`zhijin.fun` 的个人公司官网。面向电商与出海内容团队，展示 AI Skill、工作流试点、企业 AI 中台技术评估，以及公开工程实践。
 
-[在线访问](https://zhijin.fun/) · [Chain Notebook](https://zhijin.fun/chain-notebook/) · [Blockchain Homework](https://zhijin.fun/blockchain-homework/)
+## 技术栈
 
-## ✦ 当前项目
+- Next.js App Router + React + TypeScript
+- Tailwind CSS + 自定义设计令牌
+- Framer Motion（少量渐进式动效，兼容 reduced motion）
+- Next.js 静态导出 + Cloudflare Worker Assets
+- Wrangler + Oxlint
 
-| 状态 | 项目 | 入口 | 简介 |
-| --- | --- | --- | --- |
-| 🟢 在线 | **Chain Notebook** | [`/chain-notebook/`](https://zhijin.fun/chain-notebook/) | 基于 Sepolia 的链上笔记 DApp |
-| 🟢 在线 | **Blockchain Homework** | [`/blockchain-homework/`](https://zhijin.fun/blockchain-homework/) | Cosmos 与 EVM 链上开发作业演示 |
+站点使用静态导出，不依赖常驻 Node.js 服务。Cloudflare Worker 保留原有项目子路径代理能力。
 
-项目卡片统一维护在 [`src/projects.ts`](src/projects.ts)，导航首页会根据这份数据自动渲染。
+## 页面与路由
 
-## 🧭 路由与请求链路
-
-```text
-访问 zhijin.fun
-        │
-        ▼
-Cloudflare Worker（zhijin-aws-proxy）
-        ├── /                  → Vite 静态资源（dist）
-        └── /chain-notebook/*  → AWS S3 项目源站
-                                  └─ 重写页面中的 href / src 前缀
-        └── /blockchain-homework/* → 302 跳转到 AWS EC2 临时演示源站
-                                      ├─ /         → 项目总览（使用 AWS IP，确保端口 Host 校验通过）
-                                      ├─ :5174/    → Cosmos 钱包、转账、挖矿
-                                      └─ :5173/    → EVM RPC、ethers.js、The Graph
-```
-
-Worker 还负责两项入口规范化：
-
-- `www.zhijin.fun` 永久重定向到 `zhijin.fun`
-- 项目路径自动补齐结尾 `/`，保持子路径资源和路由稳定
-
-## 🧰 技术栈
-
-| 层级 | 技术 |
+| 路径 | 内容 |
 | --- | --- |
-| 页面 | React · TypeScript · Vite |
-| 边缘路由 | Cloudflare Workers · Wrangler |
-| 项目源站 | AWS S3 Website |
-| 代码检查 | TypeScript · Oxlint |
+| `/` | 公司定位、能力、产品阶梯、试点流程与 FAQ |
+| `/services/` | 服务总览 |
+| `/services/workflow-pilot/` | 7–14 天工作流试点 |
+| `/services/enterprise-ai-platform/` | 企业 AI 中台技术评估 |
+| `/products/` | 虚拟产品与 AI Skill 方法 |
+| `/products/ecommerce-ai-skills/` | 电商 AI Skill 套装规划 |
+| `/cases/` | 自研原型与公开工程实践 |
+| `/insights/` | 内容选题规划 |
+| `/about/` | 工作室定位与原则 |
+| `/contact/` | 合作前置清单与通道状态 |
+| `/privacy/` | 当前版本隐私说明 |
 
-## 📁 项目结构
+Worker 继续处理：
 
-```text
-.
-├── src/
-│   ├── App.tsx          # 导航页布局与项目卡片
-│   ├── projects.ts      # 项目目录数据
-│   ├── main.tsx         # React 入口
-│   └── styles.css       # 页面视觉样式与响应式布局
-├── worker/
-│   └── index.ts         # 首页静态资源与项目源站代理
-├── index.html           # 页面元信息与 Vite 入口
-├── vite.config.ts       # Vite 配置
-└── wrangler.jsonc       # Worker、静态资源和观测配置
-```
+- `/chain-notebook/*` → AWS S3 项目源站，并重写页面资源前缀
+- `/blockchain-homework/*` → AWS EC2 临时演示源站
+- `www.zhijin.fun` → `zhijin.fun` 308 永久重定向
 
-## 🚀 本地开发
+## 本地开发
 
 ```bash
 npm install
 npm run dev
 ```
 
-开发服务器启动后，打开终端输出的本地地址即可预览导航页。
+开发服务器默认地址为 <http://localhost:3000>。
 
 ### 常用命令
 
 | 命令 | 用途 |
 | --- | --- |
-| `npm run dev` | 启动本地开发服务器 |
-| `npm run build` | 类型检查并构建生产资源 |
-| `npm run typecheck` | 仅执行 TypeScript 检查 |
-| `npm run lint` | 检查 `src` 与 `worker` |
-| `npm run preview` | 预览构建后的静态资源 |
+| `npm run dev` | 启动 Next.js 开发服务器 |
+| `npm run build` | 使用 Webpack 生成静态站点到 `out/` |
+| `npm run typecheck` | 检查官网与 Cloudflare Worker 类型 |
+| `npm run lint` | 检查 App、组件、数据和 Worker 代码 |
+| `npm run preview` | 本地预览 `out/` 静态产物 |
 | `npm run deploy:check` | 构建并执行 Wrangler dry-run |
 | `npm run deploy` | 构建并部署到 Cloudflare Worker |
 
-提交或部署前建议至少执行：
+提交或部署前至少执行：
 
 ```bash
-npm run typecheck
 npm run lint
+npm run typecheck
 npm run deploy:check
 ```
 
-## ➕ 添加一个项目
+## SEO / GEO 基础
 
-### 1. 添加导航卡片
+- 每个商业页面拥有独立标题、描述和 canonical
+- 首页输出 `ProfessionalService` JSON-LD
+- 自动生成 `sitemap.xml`、`robots.txt` 与 Web App Manifest
+- 允许主流搜索爬虫和 `OAI-SearchBot` 抓取
+- 关键业务信息直接存在于静态 HTML，使用语义标题与内部链接
+- 产品原型、规划中产品和公开项目均明确标注状态，避免未验证宣传
 
-在 [`src/projects.ts`](src/projects.ts) 的 `projects` 数组中加入项目数据：
+SEO/GEO 仍依赖后续持续发布真实、原创、可引用的案例和文章；技术标记不能替代内容可信度。
 
-```ts
-{
-  name: 'Project Name',
-  path: '/project-name/',
-  displayUrl: 'zhijin.fun/project-name',
-  category: '项目分类',
-  description: '项目说明',
-  technologies: ['React'],
-  status: 'online',
-  sequence: '02',
-}
-```
+## 内容与素材
 
-### 2. 添加 Worker 路由
+- 站点配置与导航：`lib/site.ts`
+- 页面元信息辅助：`lib/metadata.ts`
+- 全局视觉与响应式：`app/globals.css`
+- 中台原型截图：`public/images/system/`
+- 社交分享图：`public/og/zhijin-ai-og.svg`
 
-在 [`worker/index.ts`](worker/index.ts) 的 `PROJECTS` 中增加相同 slug 与 AWS 源站地址：
+联系页目前不会提交任何数据。部署前需要补充已经验证可达的企业邮箱、微信二维码或表单服务，并同步更新隐私说明。
 
-```ts
-'project-name': {
-  origin: 'http://your-s3-website-origin',
-},
-```
+## 部署
 
-其中 `project-name` 必须与 `/project-name/` 的路径保持一致。完成后运行检查命令，再通过部署命令发布。
-
-## ☁️ 部署说明
-
-部署配置集中在 [`wrangler.jsonc`](wrangler.jsonc)：
-
-- `worker/index.ts` 是 Worker 入口
-- `dist` 是由 Vite 构建出的静态资源目录
-- `run_worker_first` 确保项目路径先经过 Worker 路由判断
-- Worker 与导航页静态资源会在同一次 Wrangler 部署中发布
-- `blockchain-homework` 通过 302 网关跳转到临时 AWS EC2 源站，避免 Worker 直接回源公网 IP 时被边缘网络拦截
+静态产物目录为 `out/`，配置位于 `wrangler.jsonc`：
 
 ```bash
 npm run deploy:check
 npm run deploy
 ```
 
-`npm run deploy` 需要本机 Wrangler 已完成 Cloudflare 认证，并具备目标 Worker 的部署权限。
+`npm run deploy` 会产生真实外部变更，需要本机已完成 Cloudflare 认证并拥有目标 Worker 权限。
 
-## 📍 线上入口
+## 设计稿
 
-- 首页：<https://zhijin.fun/>
-- Chain Notebook：<https://zhijin.fun/chain-notebook/>
-- Blockchain Homework：<https://zhijin.fun/blockchain-homework/>
+- Stitch 项目：[ZHJIN AI Studio · 个人公司官网](https://stitch.withgoogle.com/projects/11733419885945959107)
 
-### Blockchain Homework 临时入口
-
-本次作业部署在一个限时 AWS EC2 演示实例上，直接地址如下：
-
-- 总览：<http://35.93.216.60/>
-- Cosmos：<http://35.93.216.60:5174/>
-- EVM：<http://35.93.216.60:5173/>
-
-实例按本次“一小时演示”要求自动释放；如果实例已释放，域名入口会暂时返回不可用，需要重新部署后更新 `worker/index.ts` 中的源站地址。
+生产代码根据设计稿重新实现，没有直接复制 Stitch 的演示 HTML。
