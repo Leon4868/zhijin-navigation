@@ -32,6 +32,9 @@ Worker 继续处理：
 
 - `/chain-notebook/*` → AWS S3 项目源站，并重写页面资源前缀
 - `/blockchain-homework/*` → AWS EC2 临时演示源站
+- `/ai-platform/*` → 企业 AI 中台工作台源站。产物自带 `/ai-platform/` 前缀，
+  所以不重写页面资源；源站下发的 Cookie 被收敛到该子路径。地址与源站凭据走
+  Wrangler secret（`AI_PLATFORM_ORIGIN`、`AI_PLATFORM_ORIGIN_TOKEN`），不入仓库。
 - `www.zhijin.fun` → `zhijin.fun` 308 永久重定向
 
 ## 本地开发

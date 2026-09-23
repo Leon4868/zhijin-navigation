@@ -1,6 +1,13 @@
 type ProjectRoute = {
   origin: string
   redirectOnly?: boolean
+  // 产物自带子路径前缀时必须关掉 HTML 重写，否则前缀会被加成两层。
+  rewriteHtml?: boolean
+  // 把源站下发的 Cookie 收敛到这个项目的子路径。源站写的是 Path=/，照搬会让
+  // 会话 Cookie 跟着官网的每一个请求一起发出去。
+  cookiePath?: string
+  // 源站校验它才放行，用来挡掉绕过本入口的直连。
+  originToken?: string
 }
 
 const PROJECTS: Readonly<Record<string, ProjectRoute>> = {
@@ -12,6 +19,48 @@ const PROJECTS: Readonly<Record<string, ProjectRoute>> = {
     origin: 'http://35.93.216.60',
     redirectOnly: true,
   },
+}
+
+function routeFor(slug: string, env: Env): ProjectRoute | undefined {
+  // 工作台这一条要从 secret 取地址和凭据，拿不到静态表里去。
+  if (slug === 'ai-platform') {
+    return {
+      origin: env.AI_PLATFORM_ORIGIN,
+      rewriteHtml: false,
+      cookiePath: '/ai-platform',
+      originToken: env.AI_PLATFORM_ORIGIN_TOKEN,
+    }
+  }
+
+  return PROJECTS[slug]
+}
+
+function withScopedCookies(
+  response: Response,
+  cookiePath: string | undefined,
+): Response {
+  const cookies = cookiePath ? response.headers.getSetCookie() : []
+
+  if (cookies.length === 0) {
+    return response
+  }
+
+  const headers = new Headers(response.headers)
+  headers.delete('set-cookie')
+
+  for (const cookie of cookies) {
+    headers.append(
+      'set-cookie',
+      cookie.replace(/;\s*Path=\/(?=;|$)/i, `; Path=${cookiePath}`),
+    )
+  }
+
+  // 传 body 而不是读它：事件流要一直流下去，读干就等于把运行看死在这里。
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  })
 }
 
 class PrefixAttribute implements HTMLRewriterElementContentHandlers {
@@ -46,6 +95,10 @@ async function proxyProject(
   const headers = new Headers(request.headers)
   headers.delete('host')
 
+  if (project.originToken) {
+    headers.set('x-origin-token', project.originToken)
+  }
+
   const response = await fetch(
     new Request(target, {
       method: request.method,
@@ -58,16 +111,17 @@ async function proxyProject(
     }),
   )
 
-  const contentType = response.headers.get('content-type') ?? ''
+  const scoped = withScopedCookies(response, project.cookiePath)
+  const contentType = scoped.headers.get('content-type') ?? ''
 
-  if (!contentType.includes('text/html')) {
-    return response
+  if (project.rewriteHtml === false || !contentType.includes('text/html')) {
+    return scoped
   }
 
   return new HTMLRewriter()
     .on('[href]', new PrefixAttribute('href', prefix))
     .on('[src]', new PrefixAttribute('src', prefix))
-    .transform(response)
+    .transform(scoped)
 }
 
 export default {
@@ -81,7 +135,7 @@ export default {
 
     const match = incoming.pathname.match(/^\/([^/]+)(?:\/|$)/)
     const slug = match?.[1]
-    const project = slug ? PROJECTS[slug] : undefined
+    const project = slug ? routeFor(slug, env) : undefined
 
     if (!project || !slug) {
       return env.ASSETS.fetch(request)
