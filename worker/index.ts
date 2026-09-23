@@ -1,6 +1,9 @@
 type ProjectRoute = {
   origin: string
   redirectOnly?: boolean
+  // 源站自己就在这个前缀下服务时不要剥前缀。剥掉之后源站的 URL 和对外 URL 就
+  // 不一样了，同一份产物没法同时服务本地隧道和公网。
+  stripPrefix?: boolean
   // 产物自带子路径前缀时必须关掉 HTML 重写，否则前缀会被加成两层。
   rewriteHtml?: boolean
   // 把源站下发的 Cookie 收敛到这个项目的子路径。源站写的是 Path=/，照搬会让
@@ -26,6 +29,7 @@ function routeFor(slug: string, env: Env): ProjectRoute | undefined {
   if (slug === 'ai-platform') {
     return {
       origin: env.AI_PLATFORM_ORIGIN,
+      stripPrefix: false,
       rewriteHtml: false,
       cookiePath: '/ai-platform',
       originToken: env.AI_PLATFORM_ORIGIN_TOKEN,
@@ -89,7 +93,10 @@ async function proxyProject(
 ): Promise<Response> {
   const prefix = `/${slug}`
   const target = new URL(project.origin)
-  target.pathname = incoming.pathname.slice(prefix.length) || '/'
+  target.pathname =
+    project.stripPrefix === false
+      ? incoming.pathname
+      : incoming.pathname.slice(prefix.length) || '/'
   target.search = incoming.search
 
   const headers = new Headers(request.headers)
