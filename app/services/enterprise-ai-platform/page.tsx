@@ -18,7 +18,7 @@ export default function EnterprisePlatformPage() {
         title="先评估组织与流程，再谈企业 AI 中台。"
         description="面向已有多个 AI 场景、需要统一模型能力、流程治理和资产沉淀的团队，提供架构梳理与分阶段实现建议。"
       >
-        <div className="button-row"><Link className="button" href="/contact/">提交评估背景 →</Link></div>
+        <div className="button-row"><a className="button" href="/ai-platform/">打开 AI-Platform 工作台 ↗</a><Link className="button button-secondary" href="/contact/">提交评估背景 →</Link></div>
       </PageHero>
       <section className="section surface-section">
         <div className="shell">

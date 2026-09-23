@@ -9,7 +9,7 @@ export default function HomePage() {
       <section className="hero">
         <div className="shell hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">Agent Engineering for Real Work</p>
+            <p className="eyebrow">ZHJIN AI · AI-Platform</p>
             <h1>
               把商品资料，变成
               <span className="gradient-text">可审核、可复用的 AI 营销素材。</span>
@@ -18,14 +18,12 @@ export default function HomePage() {
               ZHJIN AI 面向电商与出海内容团队，把大模型、知识库、工具调用与人工审批组合成真正能进入业务的 Agent 工作流。
             </p>
             <div className="button-row">
-              <Link className="button" href="/contact/">
-                申请工作流诊断 <span aria-hidden="true">→</span>
-              </Link>
-              <Link className="button button-secondary" href="/cases/">
-                查看工程实践
-              </Link>
+              <a className="button" href="/ai-platform/">
+                打开 AI-Platform 工作台 <span aria-hidden="true">↗</span>
+              </a>
+              <Link className="button button-secondary" href="/services/">了解产品与服务</Link>
             </div>
-            <p className="hero-note">开放首批共创 · 从一个可验收流程开始</p>
+            <p className="hero-note">工作台为独立项目；合作咨询可在服务页了解</p>
           </div>
           <div className="hero-visual" aria-label="AI 工作流示意图">
             <div className="orb" />
@@ -99,7 +97,10 @@ export default function HomePage() {
               <li>企业知识与资产沉淀</li>
             </ul>
             <p className="disclaimer">这是产品设计与工程能力展示，不代表已交付客户案例或公开 SaaS。</p>
-            <Link className="text-link" href="/services/enterprise-ai-platform/">了解中台技术评估 →</Link>
+            <div className="platform-links">
+              <a className="button button-small" href="/ai-platform/">打开 AI-Platform 工作台 ↗</a>
+              <Link className="text-link" href="/services/enterprise-ai-platform/">了解中台技术评估 →</Link>
+            </div>
           </MotionReveal>
         </div>
       </section>

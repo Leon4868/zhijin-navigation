@@ -27,6 +27,7 @@
 | `/about/` | 工作室定位与原则 |
 | `/contact/` | 合作前置清单与通道状态 |
 | `/privacy/` | 当前版本隐私说明 |
+| `/ai-platform/` | 独立运行的 AI-Platform 工作台；首页首屏、导航和实践页均有直接入口 |
 
 Worker 继续处理：
 

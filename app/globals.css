@@ -65,7 +65,7 @@ button, input, textarea { font: inherit; }
 .brand strong, .brand small { display: block; }
 .brand strong { font-size: 14px; letter-spacing: .11em; line-height: 1.15; }
 .brand small { color: #74849a; font-size: 9px; letter-spacing: .08em; margin-top: 3px; }
-.site-nav { display: flex; align-items: center; gap: 28px; color: #b3bfd0; font-size: 14px; }
+.site-nav { display: flex; align-items: center; gap: 22px; color: #b3bfd0; font-size: 14px; }
 .site-nav > a:not(.button) { position: relative; transition: color .2s ease; }
 .site-nav > a:not(.button)::after { content: ""; position: absolute; left: 0; right: 100%; bottom: -10px; height: 1px; background: var(--cyan); transition: right .2s ease; }
 .site-nav > a:hover, .site-nav > a.is-active { color: white; }
@@ -139,6 +139,7 @@ h3 { margin-bottom: 11px; font-size: 21px; line-height: 1.25; letter-spacing: -.
 .preview-list { margin: 28px 0; padding: 0; list-style: none; }
 .preview-list li { padding: 13px 0; border-bottom: 1px solid var(--line); color: #bdc8d8; }
 .preview-list li::before { content: "↗"; margin-right: 10px; color: var(--cyan); }
+.platform-links { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; margin-top: 28px; }
 .disclaimer { color: #75849b !important; font-size: 12px; }
 
 .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }

@@ -23,6 +23,7 @@ export function SiteFooter() {
         <div>
           <p className="footer-label">联系与项目</p>
           <div className="footer-links">
+            <a href="/ai-platform/">AI-Platform 工作台</a>
             <Link href="/contact/">合作咨询</Link>
             <a href={siteConfig.github} rel="noreferrer" target="_blank">
               GitHub

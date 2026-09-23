@@ -21,7 +21,7 @@ export default function CasesPage() {
         <div className="shell narrow">
           <p className="eyebrow">Selected Projects</p>
           <div className="case-card">
-            <div><h2>企业 AI 中台产品原型</h2><p>覆盖 Agent 编排、知识库、文档与素材生产的产品设计与工程验证。</p><div className="tag-row"><span className="tag">Agent Orchestration</span><span className="tag">Knowledge</span><span className="tag">Creative Workflow</span></div></div>
+            <div><h2>AI-Platform 工作台</h2><p>独立运行的自研项目，覆盖 Agent 编排、知识库、文档与素材生产。工作台可能需要登录。</p><div className="tag-row"><span className="tag">Agent Orchestration</span><span className="tag">Knowledge</span><span className="tag">Creative Workflow</span></div><div className="button-row"><a className="text-link" href="/ai-platform/">打开工作台 ↗</a></div></div>
             <span className="case-status">自研原型</span>
           </div>
           <div className="case-card">

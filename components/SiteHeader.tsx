@@ -37,9 +37,9 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <Link className="button button-small" href="/contact/" onClick={() => setOpen(false)}>
-            申请工作流诊断
-          </Link>
+          <a className="button button-small" href="/ai-platform/" onClick={() => setOpen(false)}>
+            打开 AI-Platform <span aria-hidden="true">↗</span>
+          </a>
         </nav>
       </div>
     </header>
